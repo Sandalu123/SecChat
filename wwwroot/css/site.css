@@ -1,0 +1,164 @@
+:root {
+  /* Light theme (default) */
+  --background-color: #ffffff;
+  --text-color: rgba(0, 0, 0, 0.87);
+  --muted-text-color: rgba(0, 0, 0, 0.6);
+  --border-color: rgba(34, 36, 38, 0.15);
+  --primary-color: #2185d0;
+  --secondary-color: #1b1c1d;
+  --success-color: #21ba45;
+  --warning-color: #f2711c;
+  --error-color: #db2828;
+  --card-background: #f8f9fa;
+  --input-background: #ffffff;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Dark theme */
+[data-theme="dark"] {
+  --background-color: #1b1c1d;
+  --text-color: rgba(255, 255, 255, 0.9);
+  --muted-text-color: rgba(255, 255, 255, 0.6);
+  --border-color: rgba(255, 255, 255, 0.1);
+  --primary-color: #54c8ff;
+  --secondary-color: #f2f2f2;
+  --success-color: #2ecc40;
+  --warning-color: #ff851b;
+  --error-color: #ff4136;
+  --card-background: #25282a;
+  --input-background: #2d3032;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+}
+
+html, body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: all 0.3s ease;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.ui.container {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
+/* Override Semantic UI theme for dark mode */
+[data-theme="dark"] .ui.segment {
+  background-color: var(--card-background);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .ui.secondary.menu {
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .ui.header,
+[data-theme="dark"] .ui.header .sub.header {
+  color: var(--text-color);
+}
+
+[data-theme="dark"] .ui.divider {
+  border-top-color: var(--border-color);
+  border-bottom-color: var(--border-color);
+}
+
+[data-theme="dark"] .ui.form input,
+[data-theme="dark"] .ui.form textarea {
+  background-color: var(--input-background);
+  color: var(--text-color);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .ui.form label {
+  color: var(--text-color);
+}
+
+/* Theme transition */
+*, *:before, *:after {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Custom styles for chat interface */
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 70vh;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background-color: var(--card-background);
+}
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+}
+
+.chat-input {
+  padding: 1rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.message {
+  margin-bottom: 1rem;
+  padding: 0.7rem 1rem;
+  border-radius: 4px;
+  max-width: 70%;
+  position: relative;
+}
+
+.message.mine {
+  background-color: var(--primary-color);
+  color: white;
+  align-self: flex-end;
+  margin-left: auto;
+}
+
+.message.other {
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+  align-self: flex-start;
+}
+
+.message .author {
+  font-weight: bold;
+  margin-bottom: 0.3rem;
+}
+
+.message .time {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  margin-top: 0.3rem;
+}
+
+.participants {
+  padding: 1rem;
+  border-left: 1px solid var(--border-color);
+  width: 250px;
+}
+
+.typing-indicator {
+  font-style: italic;
+  margin: 0.5rem 0;
+  color: var(--muted-text-color);
+  height: 1.2rem;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.message {
+  animation: fadeIn 0.3s ease;
+}
