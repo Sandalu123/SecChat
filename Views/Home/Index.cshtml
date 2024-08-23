@@ -1,0 +1,81 @@
+@{
+    ViewData["Title"] = "SecureChat";
+}
+
+<div class="ui placeholder segment">
+    <div class="ui two column stackable center aligned grid">
+        <div class="ui vertical divider">Or</div>
+        <div class="middle aligned row">
+            <div class="column">
+                <div class="ui icon header">
+                    <i class="lock icon"></i>
+                    Create a New Secure Chat
+                </div>
+                <form asp-action="Create" method="post" class="ui form">
+                    <div class="field">
+                        <button type="submit" class="ui primary button">
+                            <i class="plus icon"></i>
+                            Create New Session
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="column">
+                <div class="ui icon header">
+                    <i class="users icon"></i>
+                    Join an Existing Chat
+                </div>
+                <form asp-action="Join" method="get" class="ui form">
+                    <div class="field">
+                        <div class="ui action input">
+                            <input type="text" name="id" placeholder="Enter Session ID..." required>
+                            <button type="submit" class="ui primary button">Join</button>
+                        </div>
+                    </div>
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="ui negative message">
+                            <div class="header">Error</div>
+                            <ul>
+                                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                                {
+                                    <li>@error.ErrorMessage</li>
+                                }
+                            </ul>
+                        </div>
+                    }
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="ui segments">
+    <div class="ui segment">
+        <h3 class="ui header">
+            <i class="shield alternate icon"></i>
+            <div class="content">
+                End-to-End Encrypted
+                <div class="sub header">All messages are encrypted before leaving your device</div>
+            </div>
+        </h3>
+    </div>
+    <div class="ui segment">
+        <h3 class="ui header">
+            <i class="ghost icon"></i>
+            <div class="content">
+                Ephemeral Messaging
+                <div class="sub header">Sessions automatically expire after 30 minutes of inactivity</div>
+            </div>
+        </h3>
+    </div>
+    <div class="ui segment">
+        <h3 class="ui header">
+            <i class="user secret icon"></i>
+            <div class="content">
+                Anonymous Participation
+                <div class="sub header">Random names and avatars keep your identity private</div>
+            </div>
+        </h3>
+    </div>
+</div>
