@@ -1,0 +1,171 @@
+@{
+    ViewData["Title"] = "Secure Chat Room";
+}
+
+<div class="ui grid chat-container">
+    <div class="twelve wide column">
+        <div class="chat-messages" id="messageList">
+            <!-- Messages will be inserted here via JavaScript -->
+            <div class="ui info message">
+                <div class="header">Welcome to SecureChat</div>
+                <p>You've joined a secure, end-to-end encrypted chat session as <strong>@ViewBag.RandomName</strong>.</p>
+                <p>Messages are encrypted before leaving your device and can only be read by participants in this chat.</p>
+                <p>Share this session ID with people you want to chat with: <strong>@ViewBag.SessionId</strong></p>
+            </div>
+        </div>
+        
+        <div class="ui divider"></div>
+        
+        <div class="chat-input">
+            <div class="ui form">
+                <div class="field">
+                    <div class="ui action fluid input">
+                        <input type="text" id="messageInput" placeholder="Type your message..." disabled>
+                        <button id="sendButton" class="ui primary button" disabled>
+                            <i class="paper plane icon"></i>
+                            Send
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="typing-indicator" id="typingIndicator"></div>
+        </div>
+    </div>
+    
+    <div class="four wide column participants">
+        <h3 class="ui header">
+            <i class="users icon"></i>
+            <div class="content">Participants</div>
+        </h3>
+        <div class="ui divider"></div>
+        <div class="ui list" id="participantList">
+            <!-- Participants will be inserted here via JavaScript -->
+        </div>
+        
+        <div class="ui divider"></div>
+        <button id="destroySessionBtn" class="ui negative button">
+            <i class="trash alternate icon"></i>
+            Destroy Session
+        </button>
+    </div>
+</div>
+
+<div class="ui tiny modal" id="destroyConfirmModal">
+    <div class="header">Destroy Session</div>
+    <div class="content">
+        <p>Are you sure you want to destroy this chat session? This action will remove all participants and cannot be undone.</p>
+    </div>
+    <div class="actions">
+        <div class="ui cancel button">Cancel</div>
+        <div class="ui negative button" id="confirmDestroyBtn">Destroy</div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Store session info
+        const sessionId = '@ViewBag.SessionId';
+        const myName = '@ViewBag.RandomName';
+        const myAvatar = '@ViewBag.AvatarCode';
+        let myConnectionId = '';
+        
+        // Initialize empty participants tracking
+        const participants = {};
+        
+        $(document).ready(function() {
+            // This is a placeholder for the SignalR and encryption implementation
+            // The full functionality will be implemented in Phase 2
+            
+            // Set up UI interactions
+            $('#messageInput').on('keypress', function(e) {
+                if (e.which === 13) {
+                    sendMessage();
+                    return false;
+                }
+            });
+            
+            $('#sendButton').on('click', sendMessage);
+            
+            $('#destroySessionBtn').on('click', function() {
+                $('#destroyConfirmModal').modal('show');
+            });
+            
+            $('#confirmDestroyBtn').on('click', function() {
+                // Will be implemented with SignalR
+                alert('Destroy session functionality will be implemented in Phase 2');
+                $('#destroyConfirmModal').modal('hide');
+            });
+            
+            // Add self to participant list
+            addParticipant('You', myAvatar, true);
+            
+            // Enable UI (would normally wait for connection)
+            $('#messageInput').prop('disabled', false);
+            $('#sendButton').prop('disabled', false);
+        });
+        
+        function sendMessage() {
+            const messageInput = $('#messageInput');
+            const message = messageInput.val().trim();
+            
+            if (message) {
+                // In Phase 2, this will encrypt and send via SignalR
+                // For now, just show in UI
+                addMessageToChat('You', message, true);
+                messageInput.val('');
+            }
+        }
+        
+        function addMessageToChat(sender, text, isFromMe) {
+            const messageList = $('#messageList');
+            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            const messageClass = isFromMe ? 'mine' : 'other';
+            const messageHtml = `
+                <div class="message ${messageClass}">
+                    <div class="author">${sender}</div>
+                    <div class="text">${text}</div>
+                    <div class="time">${time}</div>
+                </div>
+            `;
+            
+            messageList.append(messageHtml);
+            messageList.scrollTop(messageList[0].scrollHeight);
+        }
+        
+        function addParticipant(name, avatarCode, isSelf) {
+            const parts = avatarCode.split('-');
+            const color = parts[0];
+            const shape = parts[1];
+            const bgcolor = parts[2];
+            
+            const participantHtml = `
+                <div class="item" data-id="${isSelf ? 'me' : name}">
+                    <div class="ui avatar image" style="background-color: ${bgcolor};">
+                        <div style="color: ${color}; font-size: 1.2em; text-align: center; line-height: 35px;">
+                            ${getShapeChar(shape)}
+                        </div>
+                    </div>
+                    <div class="content">
+                        <div class="header">${name}</div>
+                        <div class="description">${isSelf ? '(you)' : 'Online'}</div>
+                    </div>
+                </div>
+            `;
+            
+            $('#participantList').append(participantHtml);
+        }
+        
+        function getShapeChar(shape) {
+            switch (shape) {
+                case '1': return '●'; // circle
+                case '2': return '■'; // square
+                case '3': return '▲'; // triangle
+                case '4': return '★'; // star
+                case '5': return '◆'; // diamond
+                case '6': return '⬢'; // hexagon
+                default: return '●';
+            }
+        }
+    </script>
+}
